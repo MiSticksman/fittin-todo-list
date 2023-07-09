@@ -64,96 +64,98 @@ class _TodoListPageState extends State<TodoListPage> {
                           },
                           child: Icon(
                               state.completeTasksVisible
-                                  ? Icons.remove_red_eye_rounded
-                                  : Icons.remove_red_eye_outlined,
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: themeData.colorScheme.primary),
                         ))
                       ],
                     ),
                   ),
-                  Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
+                  Flexible(
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 17, vertical: 5),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
-                    ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: state.todos.length,
-                      itemBuilder: ((context, index) {
-                        TodoModel todo = state.todos[index];
-                        return Dismissible(
-                          key: ObjectKey(todo),
-                          background: Container(
-                            alignment: AlignmentDirectional.centerStart,
-                            color: Colors.green,
-                            child: Icon(
-                              todo.done == false ? Icons.done : Icons.close,
-                              color: themeData.colorScheme.surface,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.todos.length,
+                        itemBuilder: ((context, index) {
+                          TodoModel todo = state.todos[index];
+                          return Dismissible(
+                            key: ObjectKey(todo),
+                            background: Container(
+                              alignment: AlignmentDirectional.centerStart,
+                              color: Colors.green,
+                              child: Icon(
+                                todo.done == false ? Icons.done : Icons.close,
+                                color: themeData.colorScheme.surface,
+                              ),
                             ),
-                          ),
-                          secondaryBackground: Container(
-                            alignment: AlignmentDirectional.centerEnd,
-                            color: Colors.red,
-                            child: Icon(
-                              Icons.delete,
-                              color: themeData.colorScheme.surface,
+                            secondaryBackground: Container(
+                              alignment: AlignmentDirectional.centerEnd,
+                              color: Colors.red,
+                              child: Icon(
+                                Icons.delete,
+                                color: themeData.colorScheme.surface,
+                              ),
                             ),
-                          ),
-                          onDismissed: (DismissDirection direction) {
-                            if (direction == DismissDirection.endToStart) {
-                              context.read<TodosBloc>().add(
-                                  DeleteTodoEvent(todo: todo, index: index));
-                            }
+                            onDismissed: (DismissDirection direction) {
+                              if (direction == DismissDirection.endToStart) {
+                                context.read<TodosBloc>().add(
+                                    DeleteTodoEvent(todo: todo, index: index));
+                              }
 
-                            if (direction == DismissDirection.startToEnd) {
-                              context
-                                  .read<TodosBloc>()
-                                  .add(ChangeTodoStatusEvent(todo: todo));
-                            }
-                          },
-                          child: CheckboxListTile(
-                            controlAffinity: ListTileControlAffinity.leading,
-                            value: todo.done,
-                            onChanged: (value) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      TodoEditingPage(index: index, todo: todo),
-                                ),
-                              );
+                              if (direction == DismissDirection.startToEnd) {
+                                context
+                                    .read<TodosBloc>()
+                                    .add(ChangeTodoStatusEvent(todo: todo));
+                              }
                             },
-                            title: Text(
-                              todo.text,
-                              style: themeData.textTheme.headlineSmall
-                                  ?.copyWith(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
-                                      height: 15 / 19,
-                                      decoration: todo.done == false
-                                          ? TextDecoration.none
-                                          : TextDecoration.lineThrough),
-                            ),
-                            subtitle: todo.deadline == null
-                                ? null
-                                : Text(
-                                    DateFormat.yMMMMd()
-                                        .format(todo.deadline!)
-                                        .toString(),
-                                    style: themeData.textTheme.headlineSmall
-                                        ?.copyWith(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w400,
-                                            height: 13 / 19,
-                                            decoration: todo.done == false
-                                                ? TextDecoration.none
-                                                : TextDecoration.lineThrough),
+                            child: CheckboxListTile(
+                              controlAffinity: ListTileControlAffinity.leading,
+                              value: todo.done,
+                              onChanged: (value) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => TodoEditingPage(
+                                        index: index, todo: todo),
                                   ),
-                          ),
-                        );
-                      }),
+                                );
+                              },
+                              title: Text(
+                                todo.text,
+                                style: themeData.textTheme.headlineSmall
+                                    ?.copyWith(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        height: 15 / 19,
+                                        decoration: todo.done == false
+                                            ? TextDecoration.none
+                                            : TextDecoration.lineThrough),
+                              ),
+                              subtitle: todo.deadline == null
+                                  ? null
+                                  : Text(
+                                      DateFormat.yMMMMd()
+                                          .format(todo.deadline!)
+                                          .toString(),
+                                      style: themeData.textTheme.headlineSmall
+                                          ?.copyWith(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w400,
+                                              height: 13 / 19,
+                                              decoration: todo.done == false
+                                                  ? TextDecoration.none
+                                                  : TextDecoration.lineThrough),
+                                    ),
+                            ),
+                          );
+                        }),
+                      ),
                     ),
                   ),
                 ],
