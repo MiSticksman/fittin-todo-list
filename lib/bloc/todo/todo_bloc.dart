@@ -4,8 +4,10 @@ import 'package:fittin_1/models/todo_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TodosBloc extends Bloc<TodosEvent, TodosState> {
+
   final List<TodoModel> _todos = [];
   int numberOfCompleted = 0;
+
   TodosBloc() : super(TodosLoadingState()) {
     on<LoadTodosEvent>(_onLoadTodos);
     on<ChangeTodoStatusEvent>(_onChangeTodoStatus);
@@ -16,7 +18,7 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
   }
 
   void _onLoadTodos(LoadTodosEvent event, Emitter<TodosState> emit) {
-    var numberOfCompleted = _todos.where((todo) => todo.done).length;
+    numberOfCompleted = _todos.where((todo) => todo.done).length;
     emit(
       TodosLoadedState(todos: _todos, numberOfCompleted: numberOfCompleted),
     );
@@ -37,11 +39,11 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
     if (state is TodosLoadedState) {
       for (var i = 0; i < _todos.length; i++) {
         if (_todos[i] == event.todo) {
+          _todos[i].done ? numberOfCompleted-- : numberOfCompleted++;
           _todos[i] = _todos[i].copyWith(done: !_todos[i].done);
           break;
         }
       }
-      final numberOfCompleted = _todos.where((todo) => todo.done).length;
       emit(TodosLoadedState(
           todos: _todos, numberOfCompleted: numberOfCompleted));
     }
@@ -65,8 +67,8 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
     final state = this.state;
     if (state is TodosLoadedState) {
       _todos.add(event.todo);
-      var count = _todos.where((todo) => todo.done).length;
-      emit(TodosLoadedState(todos: _todos, numberOfCompleted: count));
+      emit(TodosLoadedState(
+          todos: _todos, numberOfCompleted: numberOfCompleted));
     }
   }
 
@@ -83,17 +85,19 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
           break;
         }
       }
-      var count = _todos.where((todo) => todo.done).length;
-      emit(TodosLoadedState(todos: _todos, numberOfCompleted: count));
+      emit(TodosLoadedState(
+          todos: _todos, numberOfCompleted: numberOfCompleted));
     }
   }
 
   void _onDeleteTodos(DeleteTodoEvent event, Emitter<TodosState> emit) {
     final state = this.state;
     if (state is TodosLoadedState) {
+      if (_todos[event.index].done) {
+        numberOfCompleted--;
+      }
       _todos.removeAt(event.index);
-      var count = _todos.where((todo) => todo.done).length;
-      emit(TodosLoadedState(todos: _todos, numberOfCompleted: count));
+      emit(TodosLoadedState(todos: _todos, numberOfCompleted: numberOfCompleted));
     }
   }
 }
