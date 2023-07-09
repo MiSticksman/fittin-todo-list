@@ -1,16 +1,7 @@
-# fittin_1
+# Todo list Flutter app
 
-A new Flutter project.
+Где смог и успел, пытался использовать flutter_bloc. Возможны расхождения с заданным шаблоном в цветах, стиле текста, отступах и т.д.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* нажатие на элемент - переход на страницу с редактированием;
+* свайп вправо - отметить элемент выполненным (при повторном свайпе элемент снова станет невыполненным);
+* свайп влево - удаление элмента;
